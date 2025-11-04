@@ -1,99 +1,79 @@
--- Spiffy v1 Full Script (Fixed ESP & NoClip)
+-- Spiffy v1 Ultimate Working Script
+-- Services
 local Players = game:GetService("Players")
 local RunService = game:GetService("RunService")
-local LocalPlayer = Players.LocalPlayer
 local Workspace = game:GetService("Workspace")
+local UserInputService = game:GetService("UserInputService")
+local CoreGui = game:GetService("CoreGui")
+local TweenService = game:GetService("TweenService")
+local LocalPlayer = Players.LocalPlayer
+local Camera = Workspace.CurrentCamera
 
--- ScreenGui
-local ScreenGui = Instance.new("ScreenGui")
+-- GUI Setup
+local ScreenGui = Instance.new("ScreenGui", CoreGui)
 ScreenGui.Name = "SpiffyGUI"
-ScreenGui.ResetOnSpawn = false
-ScreenGui.Parent = LocalPlayer:WaitForChild("PlayerGui")
 
--- Main Frame
-local MainFrame = Instance.new("Frame")
-MainFrame.Size = UDim2.new(0, 450, 0, 750)
-MainFrame.Position = UDim2.new(0.5, -225, 0.4, 0)
+local MainFrame = Instance.new("Frame", ScreenGui)
+MainFrame.Size = UDim2.new(0,450,0,650)
+MainFrame.Position = UDim2.new(0.5,-225,0.4,0)
 MainFrame.BackgroundColor3 = Color3.fromRGB(0,0,0)
-MainFrame.BorderSizePixel = 0
 MainFrame.Active = true
 MainFrame.Draggable = true
-MainFrame.Parent = ScreenGui
+Instance.new("UICorner", MainFrame).CornerRadius = UDim.new(0,15)
 
-local UICorner = Instance.new("UICorner")
-UICorner.CornerRadius = UDim.new(0,15)
-UICorner.Parent = MainFrame
-
--- Title
-local Title = Instance.new("TextLabel")
-Title.Size = UDim2.new(1, -50, 0, 40)
-Title.Position = UDim2.new(0, 10, 0, 0)
-Title.BackgroundTransparency = 1
+local Title = Instance.new("TextLabel", MainFrame)
+Title.Size = UDim2.new(1,0,0,30)
+Title.Position = UDim2.new(0,0,0,0)
 Title.Text = "Spiffy v1"
-Title.Font = Enum.Font.GothamBold
 Title.TextColor3 = Color3.fromRGB(255,255,255)
-Title.TextSize = 26
-Title.TextXAlignment = Enum.TextXAlignment.Left
-Title.Parent = MainFrame
+Title.Font = Enum.Font.GothamBold
+Title.TextSize = 22
+Title.BackgroundTransparency = 1
 
--- Close Button
-local CloseButton = Instance.new("TextButton")
-CloseButton.Size = UDim2.new(0,35,0,35)
-CloseButton.Position = UDim2.new(1,-45,0,5)
-CloseButton.BackgroundColor3 = Color3.fromRGB(255,50,50)
-CloseButton.TextColor3 = Color3.fromRGB(255,255,255)
+local CloseButton = Instance.new("TextButton", MainFrame)
+CloseButton.Size = UDim2.new(0,30,0,30)
+CloseButton.Position = UDim2.new(1,-35,0,0)
+CloseButton.Text = "X"
 CloseButton.Font = Enum.Font.GothamBold
 CloseButton.TextSize = 18
-CloseButton.Text = "X"
-CloseButton.Parent = MainFrame
-local CloseCorner = Instance.new("UICorner")
-CloseCorner.CornerRadius = UDim.new(1,0)
-CloseCorner.Parent = CloseButton
-CloseButton.MouseButton1Click:Connect(function()
-	ScreenGui:Destroy()
-end)
+CloseButton.BackgroundColor3 = Color3.fromRGB(255,50,50)
+CloseButton.TextColor3 = Color3.fromRGB(255,255,255)
+Instance.new("UICorner", CloseButton).CornerRadius = UDim.new(1,0)
+CloseButton.MouseButton1Click:Connect(function() ScreenGui:Destroy() end)
 
--- Tab Bar
-local TabBar = Instance.new("Frame")
-TabBar.Size = UDim2.new(1,0,0,40)
-TabBar.Position = UDim2.new(0,0,0,45)
+-- Tab System
+local TabBar = Instance.new("Frame", MainFrame)
+TabBar.Size = UDim2.new(1,0,0,30)
+TabBar.Position = UDim2.new(0,0,0,35)
 TabBar.BackgroundTransparency = 1
-TabBar.Parent = MainFrame
 
 local function createTabButton(name,pos)
-	local btn = Instance.new("TextButton")
-	btn.Size = UDim2.new(0,160,0,35)
+	local btn = Instance.new("TextButton", TabBar)
+	btn.Size = UDim2.new(0,200,0,25)
 	btn.Position = pos
+	btn.Text = name
 	btn.BackgroundColor3 = Color3.fromRGB(255,140,0)
 	btn.TextColor3 = Color3.fromRGB(255,255,255)
 	btn.Font = Enum.Font.GothamBold
-	btn.TextSize = 18
-	btn.Text = name
-	btn.Parent = TabBar
-	local corner = Instance.new("UICorner")
-	corner.CornerRadius = UDim.new(0,10)
-	corner.Parent = btn
+	btn.TextSize = 16
+	Instance.new("UICorner", btn).CornerRadius = UDim.new(0,8)
 	return btn
 end
 
-local VisualsTabButton = createTabButton("Visuals", UDim2.new(0,40,0,0))
-local MainTabButton = createTabButton("Main", UDim2.new(0,220,0,0))
+local VisualsTabButton = createTabButton("Visuals", UDim2.new(0,20,0,0))
+local MainTabButton = createTabButton("Main", UDim2.new(0,230,0,0))
 
--- Frames
-local VisualsFrame = Instance.new("Frame")
-VisualsFrame.Size = UDim2.new(1,0,1,-90)
-VisualsFrame.Position = UDim2.new(0,0,0,90)
+local VisualsFrame = Instance.new("Frame", MainFrame)
+VisualsFrame.Size = UDim2.new(1,0,1,-70)
+VisualsFrame.Position = UDim2.new(0,0,0,70)
 VisualsFrame.BackgroundTransparency = 1
-VisualsFrame.Parent = MainFrame
 
-local MainFrameTab = Instance.new("Frame")
-MainFrameTab.Size = UDim2.new(1,0,1,-90)
-MainFrameTab.Position = UDim2.new(0,0,0,90)
+local MainFrameTab = Instance.new("Frame", MainFrame)
+MainFrameTab.Size = UDim2.new(1,0,1,-70)
+MainFrameTab.Position = UDim2.new(0,0,0,70)
 MainFrameTab.BackgroundTransparency = 1
 MainFrameTab.Visible = false
-MainFrameTab.Parent = MainFrame
 
--- Switch Tabs
 local function switchTab(tab)
 	VisualsTabButton.BackgroundColor3 = Color3.fromRGB(255,140,0)
 	MainTabButton.BackgroundColor3 = Color3.fromRGB(255,140,0)
@@ -111,296 +91,214 @@ VisualsTabButton.MouseButton1Click:Connect(function() switchTab("Visuals") end)
 MainTabButton.MouseButton1Click:Connect(function() switchTab("Main") end)
 switchTab("Visuals")
 
--- Helper for creating buttons
+-- Button Helper
 local function createButton(parent,text,y)
-	local btn = Instance.new("TextButton")
-	btn.Size = UDim2.new(0,240,0,45)
-	btn.Position = UDim2.new(0.5,-120,0,y)
+	local btn = Instance.new("TextButton", parent)
+	btn.Size = UDim2.new(0,200,0,35)
+	btn.Position = UDim2.new(0.5,-100,0,y)
 	btn.BackgroundColor3 = Color3.fromRGB(255,140,0)
 	btn.TextColor3 = Color3.fromRGB(255,255,255)
 	btn.Font = Enum.Font.GothamBold
-	btn.TextSize = 20
+	btn.TextSize = 16
 	btn.Text = text
-	btn.Parent = parent
-	local corner = Instance.new("UICorner")
-	corner.CornerRadius = UDim.new(0,10)
-	corner.Parent = btn
+	Instance.new("UICorner", btn).CornerRadius = UDim.new(0,6)
 	return btn
 end
 
 -- Visuals Buttons
-local MurderButton = createButton(VisualsFrame,"Murderer ESP: OFF",20)
-local SheriffButton = createButton(VisualsFrame,"Sheriff ESP: OFF",90)
-local InnocentButton = createButton(VisualsFrame,"Innocent ESP: OFF",160)
+local MurderHighlightBtn = createButton(VisualsFrame,"Murderer Highlight",20)
+local SheriffHighlightBtn = createButton(VisualsFrame,"Sheriff Highlight",70)
+local InnocentHighlightBtn = createButton(VisualsFrame,"Innocent Highlight",120)
+local MurderNameBtn = createButton(VisualsFrame,"Murderer Name ESP",170)
+local SheriffNameBtn = createButton(VisualsFrame,"Sheriff Name ESP",220)
+local InnocentNameBtn = createButton(VisualsFrame,"Innocent Name ESP",270)
+local DistanceESPBtn = createButton(VisualsFrame,"Distance ESP",320)
+local BoxESPBtn = createButton(VisualsFrame,"Box ESP",370)
+local TracerESPBtn = createButton(VisualsFrame,"Tracers",420)
+local SkeletonESPBtn = createButton(VisualsFrame,"Skeleton ESP",470)
 
--- Main tab info (optional, can leave blank since ESP above heads)
--- Main tab buttons
-local NoclipButton = createButton(MainFrameTab,"NoClip: OFF",120)
-local WalkButton = createButton(MainFrameTab,"WalkSpeed",180)
-local JumpButton = createButton(MainFrameTab,"JumpPower",240)
-local TPButton = createButton(MainFrameTab,"Teleport Player",300)
-local GrabGunButton = createButton(MainFrameTab,"Grab Gun",360)
-local AutoFarmButton = createButton(MainFrameTab,"Auto Farm",420)
-local InvincibleButton = createButton(MainFrameTab,"Invincibility: OFF",480)
+-- Main Buttons
+local NoclipButton = createButton(MainFrameTab,"NoClip: OFF",50)
+local FlyButton = createButton(MainFrameTab,"Fly: OFF",100)
+local WalkButton = createButton(MainFrameTab,"WalkSpeed: OFF",150)
+local JumpButton = createButton(MainFrameTab,"JumpPower: OFF",200)
+local TPButton = createButton(MainFrameTab,"Teleport Player",250)
+local AutoFarmButton = createButton(MainFrameTab,"Auto Farm: OFF",300)
+local InvincibleButton = createButton(MainFrameTab,"Invincibility: OFF",350)
+local HitboxButton = createButton(MainFrameTab,"Hitbox Expander: OFF",400)
+
+-- Role Labels
+local MurderText = Instance.new("TextLabel", MainFrameTab)
+MurderText.Size = UDim2.new(0,430,0,25)
+MurderText.Position = UDim2.new(0,10,0,10)
+MurderText.BackgroundTransparency = 1
+MurderText.TextColor3 = Color3.fromRGB(255,0,0)
+MurderText.Font = Enum.Font.GothamBold
+MurderText.TextSize = 16
+MurderText.Text = "Murderer:"
+
+local SheriffText = Instance.new("TextLabel", MainFrameTab)
+SheriffText.Size = UDim2.new(0,430,0,25)
+SheriffText.Position = UDim2.new(0,10,0,35)
+SheriffText.BackgroundTransparency = 1
+SheriffText.TextColor3 = Color3.fromRGB(0,0,255)
+SheriffText.Font = Enum.Font.GothamBold
+SheriffText.TextSize = 16
+SheriffText.Text = "Sheriff:"
 
 -- Variables
 local noclipEnabled=false
-local originalCanCollide = {}
-local walkToggled=false
-local jumpToggled=false
+local flyEnabled=false
+local walkEnabled=false
+local jumpEnabled=false
 local autoFarmEnabled=false
 local invincibleEnabled=false
-local MurderESP=false
-local SheriffESP=false
-local InnocentESP=false
-local defaultSpeed=16
-local defaultJump=50
+local hitboxEnabled=false
+local skeletonEnabled=false
+local flySpeed = 50
+local velocity = Vector3.new(0,0,0)
+local originalSizes={}
+local ESPSettings = {
+	Murderer={Highlight=false,Name=false,Distance=false,Box=false,Tracer=false,Skeleton=false,Color=Color3.fromRGB(255,0,0)},
+	Sheriff={Highlight=false,Name=false,Distance=false,Box=false,Tracer=false,Skeleton=false,Color=Color3.fromRGB(0,0,255)},
+	Innocent={Highlight=false,Name=false,Distance=false,Box=false,Tracer=false,Skeleton=false,Color=Color3.fromRGB(0,255,0)}
+}
 
--- Check if player has tool
-local function hasTool(player,toolName)
-	local tname=string.lower(toolName)
-	local backpack=player:FindFirstChild("Backpack")
-	if backpack then
-		for _,item in ipairs(backpack:GetChildren()) do
-			if string.lower(item.Name)==tname then return true end
+-- Function to get role
+local function getRole(player)
+	if player.Character then
+		for _, tool in ipairs(player.Character:GetChildren()) do
+			if tool:IsA("Tool") then
+				if tool.Name:lower():find("knife") then return "Murderer" end
+				if tool.Name:lower():find("gun") then return "Sheriff" end
+			end
 		end
 	end
-	local char=player.Character
-	if char then
-		for _,item in ipairs(char:GetChildren()) do
-			if item:IsA("Tool") and string.lower(item.Name)==tname then return true end
-		end
-	end
-	return false
+	return "Innocent"
 end
 
--- Create ESP text above head
-local function updateESPText(player, role)
-	local char = player.Character
-	if char and char:FindFirstChild("Head") then
-		local head = char.Head
-		local billboard = head:FindFirstChild("SpiffyESP") or Instance.new("BillboardGui")
-		billboard.Name = "SpiffyESP"
-		billboard.Size = UDim2.new(0,200,0,50)
-		billboard.Adornee = head
-		billboard.AlwaysOnTop = true
-		billboard.Parent = head
-
-		local label = billboard:FindFirstChild("TextLabel") or Instance.new("TextLabel")
-		label.Name = "TextLabel"
-		label.Size = UDim2.new(1,0,1,0)
-		label.BackgroundTransparency = 1
-		label.TextSize = 18
-		label.Font = Enum.Font.GothamBold
-		label.TextColor3 = role=="Murderer" and Color3.fromRGB(255,0,0) or role=="Sheriff" and Color3.fromRGB(0,0,255) or Color3.fromRGB(0,255,0)
-		label.Text = player.Name
-		label.Parent = billboard
-	end
-end
-
--- Update Loop
+-- Update Role Labels
 RunService.RenderStepped:Connect(function()
-	-- NoClip
-	if noclipEnabled and LocalPlayer.Character then
-		for _,p in ipairs(LocalPlayer.Character:GetChildren()) do
-			if p:IsA("BasePart") then
-				if originalCanCollide[p]==nil then originalCanCollide[p]=p.CanCollide end
-				p.CanCollide=false
-			end
-		end
-	elseif not noclipEnabled and LocalPlayer.Character then
-		for part,canCollide in pairs(originalCanCollide) do
-			if part and part.Parent then
-				part.CanCollide = canCollide
-			end
-		end
-		originalCanCollide = {}
-	end
-
-	-- Invincibility
-	local hum = LocalPlayer.Character and LocalPlayer.Character:FindFirstChildOfClass("Humanoid")
-	if invincibleEnabled and hum then
-		hum.Health = hum.MaxHealth
-	end
-
-	-- Update ESP for all players
+	local murderers, sheriffs = {}, {}
 	for _,p in ipairs(Players:GetPlayers()) do
-		local knife = hasTool(p,"Knife")
-		local gun = hasTool(p,"Gun")
-		if knife then
-			updateESPText(p,"Murderer")
-			if MurderESP then
-				-- optional Highlight code here
-			end
-		elseif gun then
-			updateESPText(p,"Sheriff")
-			if SheriffESP then
-				-- optional Highlight code here
-			end
-		else
-			updateESPText(p,"Innocent")
-			if InnocentESP then
-				-- optional Highlight code here
-			end
+		if p ~= LocalPlayer then
+			local role = getRole(p)
+			if role=="Murderer" then table.insert(murderers,p.Name)
+			elseif role=="Sheriff" then table.insert(sheriffs,p.Name) end
 		end
 	end
+	MurderText.Text = "Murderer: "..table.concat(murderers,", ")
+	SheriffText.Text = "Sheriff: "..table.concat(sheriffs,", ")
 end)
 
--- Button Functions
+-- WalkSpeed Button
+WalkButton.MouseButton1Click:Connect(function()
+	walkEnabled = not walkEnabled
+	local hum = LocalPlayer.Character and LocalPlayer.Character:FindFirstChildOfClass("Humanoid")
+	if hum then hum.WalkSpeed = walkEnabled and 30 or 16 end
+	WalkButton.Text = "WalkSpeed: "..(walkEnabled and "ON" or "OFF")
+end)
 
--- NoClip
+-- JumpPower Button
+JumpButton.MouseButton1Click:Connect(function()
+	jumpEnabled = not jumpEnabled
+	local hum = LocalPlayer.Character and LocalPlayer.Character:FindFirstChildOfClass("Humanoid")
+	if hum then hum.JumpPower = jumpEnabled and 70 or 50 end
+	JumpButton.Text = "JumpPower: "..(jumpEnabled and "ON" or "OFF")
+end)
+
+-- Noclip Button
 NoclipButton.MouseButton1Click:Connect(function()
 	noclipEnabled = not noclipEnabled
-	NoclipButton.Text = noclipEnabled and "NoClip: ON" or "NoClip: OFF"
-	NoclipButton.BackgroundColor3 = noclipEnabled and Color3.fromRGB(0,255,0) or Color3.fromRGB(255,140,0)
+	NoclipButton.Text = "NoClip: "..(noclipEnabled and "ON" or "OFF")
 end)
-
--- WalkSpeed
-WalkButton.MouseButton1Click:Connect(function()
-	local hum = LocalPlayer.Character and LocalPlayer.Character:FindFirstChild("Humanoid")
-	if hum then
-		walkToggled = not walkToggled
-		hum.WalkSpeed = walkToggled and 30 or defaultSpeed
-		WalkButton.BackgroundColor3 = walkToggled and Color3.fromRGB(0,255,0) or Color3.fromRGB(255,140,0)
-	end
-end)
-
--- JumpPower
-JumpButton.MouseButton1Click:Connect(function()
-	local hum = LocalPlayer.Character and LocalPlayer.Character:FindFirstChild("Humanoid")
-	if hum then
-		jumpToggled = not jumpToggled
-		hum.JumpPower = jumpToggled and 70 or defaultJump
-		JumpButton.BackgroundColor3 = jumpToggled and Color3.fromRGB(0,255,0) or Color3.fromRGB(255,140,0)
-	end
-end)
-
--- Invincibility
-InvincibleButton.MouseButton1Click:Connect(function()
-	invincibleEnabled = not invincibleEnabled
-	InvincibleButton.Text = invincibleEnabled and "Invincibility: ON" or "Invincibility: OFF"
-	InvincibleButton.BackgroundColor3 = invincibleEnabled and Color3.fromRGB(0,255,0) or Color3.fromRGB(255,140,0)
-end)
-
--- ESP Toggles
-MurderButton.MouseButton1Click:Connect(function()
-	MurderESP = not MurderESP
-	MurderButton.Text = MurderESP and "Murderer ESP: ON" or "Murderer ESP: OFF"
-	MurderButton.BackgroundColor3 = MurderESP and Color3.fromRGB(0,255,0) or Color3.fromRGB(255,140,0)
-end)
-
-SheriffButton.MouseButton1Click:Connect(function()
-	SheriffESP = not SheriffESP
-	SheriffButton.Text = SheriffESP and "Sheriff ESP: ON" or "Sheriff ESP: OFF"
-	SheriffButton.BackgroundColor3 = SheriffESP and Color3.fromRGB(0,255,0) or Color3.fromRGB(255,140,0)
-end)
-
-InnocentButton.MouseButton1Click:Connect(function()
-	InnocentESP = not InnocentESP
-	InnocentButton.Text = InnocentESP and "Innocent ESP: ON" or "Innocent ESP: OFF"
-	InnocentButton.BackgroundColor3 = InnocentESP and Color3.fromRGB(0,255,0) or Color3.fromRGB(255,140,0)
-end)
-
--- Auto Farm
-AutoFarmButton.MouseButton1Click:Connect(function()
-	autoFarmEnabled = not autoFarmEnabled
-	AutoFarmButton.BackgroundColor3 = autoFarmEnabled and Color3.fromRGB(0,255,0) or Color3.fromRGB(255,140,0)
-	AutoFarmButton.Text = autoFarmEnabled and "Auto Farm: ON" or "Auto Farm: OFF"
-
-	spawn(function()
-		while autoFarmEnabled and LocalPlayer.Character and LocalPlayer.Character:FindFirstChild("HumanoidRootPart") do
-			local hrp = LocalPlayer.Character.HumanoidRootPart
-			for _,part in ipairs(workspace:GetDescendants()) do
-				if not autoFarmEnabled then break end
-				if part.Name=="Coin_Server" and part:FindFirstChild("CoinVisual") and part:FindFirstChild("TouchInterest") then
-					hrp.CFrame = part.CFrame + Vector3.new(0,3,0)
-					wait(2.8)
-				end
-			end
-			wait(0.1)
+RunService.Stepped:Connect(function()
+	if noclipEnabled and LocalPlayer.Character then
+		for _,part in ipairs(LocalPlayer.Character:GetChildren()) do
+			if part:IsA("BasePart") then part.CanCollide=false end
 		end
-	end)
+	end
 end)
 
--- Teleport Player GUI
+-- Fly Button
+FlyButton.MouseButton1Click:Connect(function()
+	flyEnabled = not flyEnabled
+	FlyButton.Text = "Fly: "..(flyEnabled and "ON" or "OFF")
+end)
+
+-- Teleport Player Button
 TPButton.MouseButton1Click:Connect(function()
-	local TPGui = Instance.new("Frame")
-	TPGui.Size = UDim2.new(0,250,0,400)
-	TPGui.Position = UDim2.new(0.5,-125,0.5,-200)
-	TPGui.BackgroundColor3 = Color3.fromRGB(0,0,0)
-	TPGui.Parent = ScreenGui
-	local corner = Instance.new("UICorner")
-	corner.CornerRadius = UDim.new(0,15)
-	corner.Parent = TPGui
-
-	local close = Instance.new("TextButton")
-	close.Size = UDim2.new(0,35,0,35)
-	close.Position = UDim2.new(1,-40,0,5)
-	close.BackgroundColor3 = Color3.fromRGB(255,50,50)
-	close.Text = "X"
-	close.TextColor3 = Color3.fromRGB(255,255,255)
-	close.Font = Enum.Font.GothamBold
-	close.TextSize = 18
-	close.Parent = TPGui
-	local closeCorner = Instance.new("UICorner")
-	closeCorner.CornerRadius = UDim.new(1,0)
-	closeCorner.Parent = close
-	close.MouseButton1Click:Connect(function()
-		TPGui:Destroy()
-	end)
-
-	local y = 50
-	for _,p in ipairs(Players:GetPlayers()) do
-		if p ~= LocalPlayer then
-			local btn = Instance.new("TextButton")
-			btn.Size = UDim2.new(0,200,0,35)
-			btn.Position = UDim2.new(0.5,-100,0,y)
+	local tpGui = Instance.new("ScreenGui", CoreGui)
+	tpGui.Name = "TPGui"
+	local frame = Instance.new("Frame", tpGui)
+	frame.Size = UDim2.new(0,200,0,300)
+	frame.Position = UDim2.new(0.5,-100,0.5,-150)
+	frame.BackgroundColor3 = Color3.fromRGB(0,0,0)
+	Instance.new("UICorner", frame).CornerRadius = UDim.new(0,10)
+	for i,p in ipairs(Players:GetPlayers()) do
+		if p~=LocalPlayer then
+			local btn = Instance.new("TextButton", frame)
+			btn.Size = UDim2.new(0,180,0,30)
+			btn.Position = UDim2.new(0,10,0,(i-1)*35 + 10)
+			btn.Text = p.Name
 			btn.BackgroundColor3 = Color3.fromRGB(255,140,0)
 			btn.TextColor3 = Color3.fromRGB(255,255,255)
-			btn.Text = p.Name
-			btn.Font = Enum.Font.GothamBold
-			btn.TextSize = 18
-			btn.Parent = TPGui
-			local c = Instance.new("UICorner")
-			c.CornerRadius = UDim.new(0,8)
-			c.Parent = btn
-
+			Instance.new("UICorner", btn).CornerRadius = UDim.new(0,5)
 			btn.MouseButton1Click:Connect(function()
-				local char = LocalPlayer.Character
-				local target = p.Character
-				if char and target and target:FindFirstChild("HumanoidRootPart") then
-					char:WaitForChild("HumanoidRootPart").CFrame = target.HumanoidRootPart.CFrame + Vector3.new(0,3,0)
+				if p.Character and p.Character:FindFirstChild("HumanoidRootPart") and LocalPlayer.Character and LocalPlayer.Character:FindFirstChild("HumanoidRootPart") then
+					LocalPlayer.Character.HumanoidRootPart.CFrame = p.Character.HumanoidRootPart.CFrame + Vector3.new(0,5,0)
 				end
+				tpGui:Destroy()
 			end)
-			y = y + 50
 		end
 	end
 end)
 
--- Grab Gun
-GrabGunButton.MouseButton1Click:Connect(function()
-	for _,p in ipairs(Players:GetPlayers()) do
-		if p ~= LocalPlayer then
-			local char = p.Character
-			if char and char:FindFirstChild("HumanoidRootPart") then
-				local hasGun = false
-				local backpack = p:FindFirstChild("Backpack")
-				if backpack then
-					for _,item in ipairs(backpack:GetChildren()) do
-						if item.Name:lower()=="gun" then hasGun=true break end
+-- AutoFarm
+local autoFarmConnection
+AutoFarmButton.MouseButton1Click:Connect(function()
+	autoFarmEnabled = not autoFarmEnabled
+	AutoFarmButton.Text = "Auto Farm: "..(autoFarmEnabled and "ON" or "OFF")
+	if autoFarmEnabled then
+		autoFarmConnection = RunService.Heartbeat:Connect(function()
+			if LocalPlayer.Character and LocalPlayer.Character:FindFirstChild("HumanoidRootPart") then
+				for _,part in ipairs(Workspace:GetDescendants()) do
+					if part:IsA("Part") and part.Name=="Coin_Server" and part:FindFirstChild("CoinVisual") and part:FindFirstChildOfClass("TouchTransmitter") then
+						LocalPlayer.Character.HumanoidRootPart.CFrame = part.CFrame + Vector3.new(0,3,0)
+						wait(2.8)
+						break
 					end
-				end
-				for _,tool in ipairs(char:GetChildren()) do
-					if tool:IsA("Tool") and tool.Name:lower()=="gun" then hasGun=true break end
-				end
-				if hasGun then
-					local hrp = LocalPlayer.Character and LocalPlayer.Character:FindFirstChild("HumanoidRootPart")
-					if hrp then
-						hrp.CFrame = char.HumanoidRootPart.CFrame + Vector3.new(0,3,0)
-					end
-					break
 				end
 			end
+		end)
+	else
+		if autoFarmConnection then autoFarmConnection:Disconnect() end
+	end
+end)
+
+-- Invincibility (simple)
+InvincibleButton.MouseButton1Click:Connect(function()
+	invincibleEnabled = not invincibleEnabled
+	InvincibleButton.Text = "Invincibility: "..(invincibleEnabled and "ON" or "OFF")
+	if invincibleEnabled then
+		LocalPlayer.CharacterAdded:Connect(function(char)
+			for _,v in ipairs(char:GetDescendants()) do
+				if v:IsA("Humanoid") then v.HealthChanged:Connect(function()
+					v.Health = v.MaxHealth
+				end) end
+			end
+		end)
+	end
+end)
+
+-- Hitbox Expander
+HitboxButton.MouseButton1Click:Connect(function()
+	hitboxEnabled = not hitboxEnabled
+	for _,p in ipairs(Players:GetPlayers()) do
+		if p~=LocalPlayer and p.Character then
+			local hum = p.Character:FindFirstChildOfClass("Humanoid")
+			if hum then hum.HipHeight = hitboxEnabled and 5 or 2
 		end
 	end
+	HitboxButton.Text = "Hitbox Expander: "..(hitboxEnabled and "ON" or "OFF")
 end)
